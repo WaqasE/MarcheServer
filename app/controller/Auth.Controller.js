@@ -11,7 +11,7 @@ class AuthController {
     }
 
 
-    async login(req, res) {
+    async login(req, res, next) {
         var re = /\S+@\S+\.\S+/;
         const data = _.pick(req.body, ['email', 'password', 'device']);
         console.log(re.test(data.email))
@@ -37,7 +37,7 @@ class AuthController {
 
 
 
-    async signup(req, res) {
+    async signup(req, res, next) {
         const data = _.pick(req.body, ['name', 'username', 'email', 'password', 'device']);
         const { error } = UserSchema.validate(data);
         if (error)
@@ -75,7 +75,7 @@ class AuthController {
 
 
 
-    async logout(req, res) {
+    async logout(req, res, next) {
         const data = _.pick(req.body, ['refreshToken', 'os']);
 
         const decoded = await SafePromise(jwt.verify(data.refreshToken, process.env.JWTPRIVATEKEY));
@@ -103,7 +103,7 @@ class AuthController {
     }
 
 
-    async token(req, res) {
+    async token(req, res, next) {
         const data = _.pick(req.body, ['refreshToken', 'os']);
 
         const decoded = await SafePromise(jwt.verify(data.refreshToken, process.env.JWTPRIVATEKEY));
