@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "ENV=development nodemon ./app",
-    "start":"ENV=staging node./app"
+    "start":"ENV=staging node app.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
