@@ -20,11 +20,6 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-    type: {
-        type: String,
-        enum: ['INVESTOR', 'SELLER'],
-        default: 'INVESTOR'
-    },
     hash: {
         type: String,
         default: ''
@@ -36,7 +31,7 @@ const UserSchema = new Schema({
         type: [
             {
                 token: String,
-                os: String,
+                device: String,
                 loggedInAt: Date
             }
         ],

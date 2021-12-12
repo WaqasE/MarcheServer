@@ -12,7 +12,8 @@ class AuthController {
 
 
     async login(req, res) {
-        const data = _.pick(req.body, ['email', 'password', 'type', 'os']);
+        const data = _.pick(req.body, ['email', 'password', 'device']);
+        console.log('here')
         // const { error } = UserSchema.validate(data);
         // if (error)
         //     next({
@@ -44,7 +45,7 @@ class AuthController {
 
 
     async signup(req, res) {
-        const data = _.pick(req.body, ['name', 'username', 'email', 'password', 'type', 'os']);
+        const data = _.pick(req.body, ['name', 'username', 'email', 'password', 'device']);
         const { error } = UserSchema.validate(data);
         if (error)
             next({
@@ -59,7 +60,7 @@ class AuthController {
                 msg: 'Email or Username already exists!'
             })
         const hashedPass = await bcrypt.hash(data.password, salt);
-        const user = await new User({ name: data.name, username: data.username, email: data.email, password: hashedPass, type: data.type })
+        const user = await new User({ name: data.name, username: data.username, email: data.email, password: hashedPass })
         if (!user)
             next({
                 status: 500,
@@ -67,7 +68,7 @@ class AuthController {
             })
         const accessToken = jwt.sign({ id: user._id, name: user.name, username: user.username, email: user.email }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
         const refreshToken = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, { expiresIn: '15d' });
-        user.tokens = [{ token: refreshToken, os: data.os, loggedInAt: new Date() }]
+        user.tokens = [{ token: refreshToken, device: data.device, loggedInAt: new Date() }]
         await user.save();
         return res.status(200).send({ accessToken: accessToken, refreshToken: refreshToken });
 
