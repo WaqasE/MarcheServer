@@ -14,7 +14,6 @@ class AuthController {
     async login(req, res, next) {
         var re = /\S+@\S+\.\S+/;
         const data = _.pick(req.body, ['email', 'password', 'device']);
-        console.log(re.test(data.email))
         const userExist = await User.findOne(re.test(data.email) ? { email: data.email } : { username: data.email })
         if (!userExist)
             next({
@@ -33,6 +32,21 @@ class AuthController {
             { _id: userExist._id },
             { $set: { tokens: [...userExist.tokens, { token: refreshToken, os: data.os, loggedInAt: new Date() }] } })
         return res.status(200).send({ accessToken: accessToken, refreshToken: refreshToken });
+    }
+
+
+    async skills(req, res, next) {
+        let id = req.params;
+        const skills = rq.body.skills
+        const userExist = await User.findById(id);
+        if (!user)
+            next({
+                status: 400,
+                msg: 'User not found!'
+            })
+        userExist.skills = skills;
+        await userExist.save();
+        return res.status(200).send('Skills updated sucessfully');
     }
 
 

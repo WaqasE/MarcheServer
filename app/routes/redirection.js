@@ -11,6 +11,7 @@ router.post('/signup', AuthController.signup);
 router.post('/login', AuthController.login);
 router.post('/token', AuthController.token);
 router.post('/logout', AuthController.logout);
+router.post('/skills/:id', AuthController.logout);
 router.post('/me', AuthController.me);
 
 // Gig Routes
