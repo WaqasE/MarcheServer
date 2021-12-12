@@ -12,32 +12,33 @@ class AuthController {
 
 
     async login(req, res) {
-        const data = _.pick(req.body, ['username', 'email', 'password', 'type', 'os']);
-        const { error } = UserSchema.validate(data);
-        if (error)
-            next({
-                status: 400,
-                msg: error.details[0].message
-            })
+        const data = _.pick(req.body, ['email', 'password', 'type', 'os']);
+        // const { error } = UserSchema.validate(data);
+        // if (error)
+        //     next({
+        //         status: 400,
+        //         msg: error.details[0].message
+        //     })
 
-        const userExist = await User.findOne(data.email ? { email: data.email } : { username: data.username })
-        if (!userExist)
-            next({
-                status: 400,
-                msg: 'User not found!'
-            })
-        const hashedPass = await bcrypt.compare(data.password, userExist.password);
-        if (!hashedPass)
-            next({
-                status: 400,
-                msg: 'Incorrect Username/email or password!'
-            })
-        const accessToken = jwt.sign({ id: userExist._id, name: userExist.name, username: userExist.username, email: userExist.email }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
-        const refreshToken = jwt.sign({ id: userExist._id }, process.env.JWTPRIVATEKEY, { expiresIn: '15d' });
-        await User.updateOne(
-            { _id: userExist._id },
-            { $set: { tokens: [...userExist.tokens, { token: refreshToken, os: data.os, loggedInAt: new Date() }] } })
-        return res.status(200).send({ accessToken: accessToken, refreshToken: refreshToken });
+        // const userExist = await User.findOne(data.email ? { email: data.email } : { username: data.username })
+        // if (!userExist)
+        //     next({
+        //         status: 400,
+        //         msg: 'User not found!'
+        //     })
+        // const hashedPass = await bcrypt.compare(data.password, userExist.password);
+        // if (!hashedPass)
+        //     next({
+        //         status: 400,
+        //         msg: 'Incorrect Username/email or password!'
+        //     })
+        // const accessToken = jwt.sign({ id: userExist._id, name: userExist.name, username: userExist.username, email: userExist.email }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
+        // const refreshToken = jwt.sign({ id: userExist._id }, process.env.JWTPRIVATEKEY, { expiresIn: '15d' });
+        // await User.updateOne(
+        //     { _id: userExist._id },
+        //     { $set: { tokens: [...userExist.tokens, { token: refreshToken, os: data.os, loggedInAt: new Date() }] } })
+        // return res.status(200).send({ accessToken: accessToken, refreshToken: refreshToken });
+        return res.status(200).send({ user: data });
     }
 
 
