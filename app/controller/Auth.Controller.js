@@ -14,7 +14,7 @@ class AuthController {
     async login(req, res) {
         var re = /\S+@\S+\.\S+/;
         const data = _.pick(req.body, ['email', 'password', 'device']);
-
+        console.log(re.test(data.email))
         const userExist = await User.findOne(re.test(data.email)? { email: data.email } : { username: data.email })
         if (!userExist)
             next({
