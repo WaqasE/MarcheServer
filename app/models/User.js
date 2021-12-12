@@ -28,13 +28,7 @@ const UserSchema = new Schema({
         type: Array
     },
     tokens: {
-        type: [
-            {
-                token: String,
-                device: String,
-                loggedInAt: Date
-            }
-        ],
+        type: Array,
         default: []
     },
     profilePicture: {
