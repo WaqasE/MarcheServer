@@ -15,7 +15,7 @@ class AuthController {
         var re = /\S+@\S+\.\S+/;
         const data = _.pick(req.body, ['email', 'password', 'device']);
         console.log(re.test(data.email))
-        const userExist = await User.findOne(re.test(data.email)? { email: data.email } : { username: data.email })
+        const userExist = await User.findOne(re.test(data.email) ? { email: data.email } : { username: data.email })
         if (!userExist)
             next({
                 status: 400,
@@ -39,6 +39,7 @@ class AuthController {
 
     async signup(req, res, next) {
         const data = _.pick(req.body, ['name', 'username', 'email', 'password', 'device']);
+        console.log(data.device)
         const { error } = UserSchema.validate(data);
         if (error)
             next({
