@@ -40,7 +40,7 @@ class AuthController {
         let id = req.params;
         const skills = req.body.skills
         const userExist = await User.findById(mongoose.Types.ObjectId(id));
-        if (!user)
+        if (!userExist)
             next({
                 status: 400,
                 msg: 'User not found!'
