@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
 
 const { User } = require('../models/');
@@ -38,7 +39,7 @@ class AuthController {
     async skills(req, res, next) {
         let id = req.params;
         const skills = req.body.skills
-        const userExist = await User.findById(id);
+        const userExist = await User.findById(mongoose.Types.ObjectId(id));
         if (!user)
             next({
                 status: 400,
