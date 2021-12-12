@@ -39,8 +39,8 @@ class AuthController {
 
     async signup(req, res, next) {
         const data = _.pick(req.body, ['name', 'username', 'email', 'password', 'device']);
-        console.log(data.device)
         const { error } = UserSchema.validate(data);
+        console.log(error)
         if (error)
             next({
                 status: 400,

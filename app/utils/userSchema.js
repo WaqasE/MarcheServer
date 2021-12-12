@@ -15,11 +15,7 @@ const schema = Joi.object({
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
 
-    type: Joi.string()
-        .min(4)
-        .max(16),
-
-    os: Joi.string()
+    device: Joi.string()
         .min(4)
         .max(20),
 
