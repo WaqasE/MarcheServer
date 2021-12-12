@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon app.js"
+    "dev": "ENV=development nodemon ./app",
+    "start":"ENV=staging node./app"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
