@@ -37,7 +37,7 @@ class AuthController {
 
     async skills(req, res, next) {
         let id = req.params;
-        const skills = rq.body.skills
+        const skills = req.body.skills
         const userExist = await User.findById(id);
         if (!user)
             next({
