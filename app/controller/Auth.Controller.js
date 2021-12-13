@@ -50,6 +50,20 @@ class AuthController {
         return res.status(200).send('Skills updated sucessfully');
     }
 
+    async profilePicture(req, res, next) {
+        let id = req.params;
+        const profilePicture = req.body.profilePicture
+        const userExist = await User.findById(mongoose.Types.ObjectId(id));
+        if (!userExist)
+            next({
+                status: 400,
+                msg: 'User not found!'
+            })
+        userExist.profilePicture = profilePicture;
+        await userExist.save();
+        return res.status(200).send('Picture updated sucessfully');
+    }
+
 
 
     async signup(req, res, next) {
