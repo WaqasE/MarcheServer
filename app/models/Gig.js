@@ -13,8 +13,8 @@ const BidSchema = new Schema({
         type: Date,
         default: Date.now
     },
-
 })
+
 
 const GigSchema = new Schema({
     title: {

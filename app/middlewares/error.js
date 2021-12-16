@@ -1,3 +1,3 @@
 module.exports=((err,req,res,next)=>{
-    return res.status(err.status).send(err.msg);
+    return res.send(err.msg).status(err.status);
 })

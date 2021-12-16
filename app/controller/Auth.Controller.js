@@ -12,21 +12,15 @@ class AuthController {
     }
 
 
-    async login(req, res, next) {
+    async login(req, res) {
         var re = /\S+@\S+\.\S+/;
         const data = _.pick(req.body, ['email', 'password', 'device']);
         const userExist = await User.findOne(re.test(data.email) ? { email: data.email } : { username: data.email })
-        if (!userExist)
-            next({
-                status: 400,
-                msg: 'User not found!'
-            })
+        if (!userExist) { return res.status(400).send('User not found'); }
         const hashedPass = await bcrypt.compare(data.password, userExist.password);
-        if (!hashedPass)
-            next({
-                status: 400,
-                msg: 'Incorrect Username/email or password!'
-            })
+        if (!hashedPass) {
+            return res.status(400).send('Incorrect Username / email or password!');
+        }
         const accessToken = jwt.sign({ id: userExist._id, name: userExist.name, username: userExist.username, email: userExist.email }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
         const refreshToken = jwt.sign({ id: userExist._id }, process.env.JWTPRIVATEKEY, { expiresIn: '15d' });
         await User.updateOne(
@@ -36,29 +30,21 @@ class AuthController {
     }
 
 
-    async skills(req, res, next) {
+    async skills(req, res) {
         let id = req.params;
         const skills = req.body.skills
         const userExist = await User.findById(mongoose.Types.ObjectId(id));
-        if (!userExist)
-            next({
-                status: 400,
-                msg: 'User not found!'
-            })
+        if (!userExist) { return res.status(400).send('User not found'); }
         userExist.skills = skills;
         await userExist.save();
         return res.status(200).send('Skills updated sucessfully');
     }
 
-    async profilePicture(req, res, next) {
+    async profilePicture(req, res) {
         let id = req.params;
         const profilePicture = req.body.profilePicture
         const userExist = await User.findById(mongoose.Types.ObjectId(id));
-        if (!userExist)
-            next({
-                status: 400,
-                msg: 'User not found!'
-            })
+        if (!userExist) { return res.status(400).send('User not found'); }
         userExist.profilePicture = profilePicture;
         await userExist.save();
         return res.status(200).send('Picture updated sucessfully');
@@ -66,29 +52,21 @@ class AuthController {
 
 
 
-    async signup(req, res, next) {
+    async signup(req, res) {
         const data = _.pick(req.body, ['name', 'username', 'email', 'password', 'device']);
         const { error } = UserSchema.validate(data);
-        console.log(error)
-        if (error)
-            next({
-                status: 400,
-                msg: error.details[0].message
-            })
-
+        if (error) {
+            return res.status(400).send(error.details[0].message);
+        }
         const userExist = await User.findOne({ email: data.email, username: data.username, })
-        if (userExist)
-            next({
-                status: 400,
-                msg: 'Email or Username already exists!'
-            })
+        if (userExist) {
+            return res.status(400).send('Email or Username already exists!');
+        }
         const hashedPass = await bcrypt.hash(data.password, salt);
         const user = await new User({ name: data.name, username: data.username, email: data.email, password: hashedPass })
-        if (!user)
-            next({
-                status: 500,
-                msg: 'internal server error!'
-            })
+        if (!user) {
+            return res.status(500).send('internal server error!');
+        }
         const accessToken = jwt.sign({ id: user._id, name: user.name, username: user.username, email: user.email }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
         const refreshToken = jwt.sign({ id: user._id }, process.env.JWTPRIVATEKEY, { expiresIn: '15d' });
         user.tokens = [{ token: refreshToken, device: data.device, loggedInAt: new Date() }]
@@ -105,26 +83,18 @@ class AuthController {
 
 
 
-    async logout(req, res, next) {
+    async logout(req, res) {
         const data = _.pick(req.body, ['refreshToken', 'os']);
 
         const decoded = await SafePromise(jwt.verify(data.refreshToken, process.env.JWTPRIVATEKEY));
         const userExist = await User.findOne({ _id: decoded.id })
-        if (!userExist)
-            next({
-                status: 400,
-                msg: 'Invalid Token'
-            })
+        if (!userExist) { return res.status(400).send('Invalid Token!'); }
         const index = userExist['tokens'].findIndex(
             (item) => (item.token === data.refreshToken && item.os === data.os)
         )
-
-        console.log(index)
-        if (!index || index === -1)
-            next({
-                status: 400,
-                msg: 'Invalid Token'
-            })
+        if (!index || index === -1) {
+            return res.status(400).send('Invalid Token!');
+        }
 
         const updatedTokenList = userExist['tokens'].splice(index, 1);
         userExist['tokens'] = updatedTokenList
@@ -133,25 +103,17 @@ class AuthController {
     }
 
 
-    async token(req, res, next) {
+    async token(req, res) {
         const data = _.pick(req.body, ['refreshToken', 'os']);
 
         const decoded = await SafePromise(jwt.verify(data.refreshToken, process.env.JWTPRIVATEKEY));
         const userExist = await User.findOne({ _id: decoded.id })
-        if (!userExist)
-            next({
-                status: 400,
-                msg: 'Invalid Token'
-            })
+        if (!userExist) { return res.status(400).send('Invalid Token!'); }
         const index = userExist['tokens'].findIndex(
             (item) => (item.token === data.refreshToken && item.os === data.os)
         )
 
-        if (!index)
-            next({
-                status: 400,
-                msg: 'Invalid Token'
-            })
+        if (!index) { return res.status(400).send('Invalid Token!'); }
 
         const accessToken = jwt.sign({ id: userExist._id, name: userExist.name, username: userExist.username, email: userExist.email }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
         return res.status(200).send({ accessToken: accessToken, refreshToken: data.refreshToken });
