@@ -25,7 +25,7 @@ class GigController {
         const gigs = await Gig.find({
             'tags': { $in: data.tags }
         })
-        return res.status(400).send({Gigs: gigs});
+        return res.status(200).send({Gigs: gigs});
     }
     async delete(req, res, next) { }
     async createBid(req, res, next) { }
