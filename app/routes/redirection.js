@@ -17,7 +17,7 @@ router.post('/profilePicture/:id', AuthController.profilePicture);
 router.post('/me', AuthController.me);
 
 // Gig Routes
-router.get('/gigs', GigController.get);
+router.post('/gigs/recomendation', GigController.get);
 router.post('/gigs', GigController.create);
 router.put('/gigs/tags', GigController.addTags);
 router.put('/gigs/:id', GigController.update);
