@@ -21,6 +21,7 @@ class GigController {
     async update(req, res, next) { }
 
     async get(req, res) {
+        console.log(req.body.tags)
         const gigs = await Gig.find({
             'tags': { $in: req.body.tags }
         })
