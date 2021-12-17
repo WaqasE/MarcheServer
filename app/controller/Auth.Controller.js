@@ -21,7 +21,7 @@ class AuthController {
         if (!hashedPass) {
             return res.status(400).send('Incorrect Username / email or password!');
         }
-        const accessToken = jwt.sign({ id: userExist._id, name: userExist.name, username: userExist.username, email: userExist.email, tags: userExist.tags, profilePicture: userExist.profilePicture, }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
+        const accessToken = jwt.sign({ id: userExist._id, name: userExist.name, username: userExist.username, email: userExist.email, skills: userExist.skills, profilePicture: userExist.profilePicture, }, process.env.JWTPRIVATEKEY, { expiresIn: '60min' });
         const refreshToken = jwt.sign({ id: userExist._id }, process.env.JWTPRIVATEKEY, { expiresIn: '15d' });
         await User.updateOne(
             { _id: userExist._id },
