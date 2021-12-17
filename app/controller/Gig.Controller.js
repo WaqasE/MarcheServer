@@ -1,5 +1,6 @@
 const { User, Gig } = require('../models/');
 const _ = require('lodash');
+const mongoose = require('mongoose')
 
 class GigController {
     constructor() {
@@ -30,7 +31,7 @@ class GigController {
 
     async createBid(req, res,) {
         let id = req.params;
-        const gig = await Gig.findById(id);
+        const gig = await Gig.findById(mongoose.Types.ObjectId(id));
         gig.bids.push({
             sender: req.body.userId,
             bid: req.body.bid,
