@@ -31,11 +31,11 @@ class GigController {
     async createBid(req, res,) {
         const { id } = req.params;
         const gig = Gig.findById(id);
-        gig.bids.push[{
+        gig.bids.push({
             sender: req.body.userId,
             bid: req.body.bid,
             bidPrice: req.body.bidPrice
-        }]
+        })
         gig.save();
         return res.status(200).send('Bid Succesfully');
     }
