@@ -9,6 +9,9 @@ const BidSchema = new Schema({
     bid: {
         type: String
     },
+    bidPrice: {
+        type: String
+    },
     created_at: {
         type: Date,
         default: Date.now

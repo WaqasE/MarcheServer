@@ -27,7 +27,16 @@ class GigController {
         return res.status(200).send({ Gigs: gigs });
     }
     async delete(req, res, next) { }
-    async createBid(req, res, next) { }
+    async createBid(req, res,) {
+        const gig = Gig.findById(req.body._id);
+        gig.bids.push[{
+            sender: req.body.userId,
+            bid: req.body.bid,
+            bidPrice: req.body.bidPrice
+        }]
+        gig.save();
+        return res.status(200).send('Bid Succesfully');
+    }
     async deleteBid(req, res, next) { }
 }
 module.exports = GigController = new GigController();
