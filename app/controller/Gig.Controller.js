@@ -30,7 +30,7 @@ class GigController {
 
     async createBid(req, res,) {
         let id = req.params;
-        const gig = Gig.findById(id);
+        const gig = await Gig.findById(id);
         gig.bids.push({
             sender: req.body.userId,
             bid: req.body.bid,
