@@ -29,7 +29,7 @@ class GigController {
     async delete(req, res, next) { }
 
     async createBid(req, res,) {
-        const { id } = req.params;
+        let id = req.params;
         const gig = Gig.findById(id);
         gig.bids.push({
             sender: req.body.userId,
